@@ -1,0 +1,30 @@
+{
+  "name": "jitterbit-orders-api",
+  "version": "1.0.0",
+  "description": "Order management API built with Node.js and PostgreSQL for the Jitterbit technical challenge.",
+  "private": true,
+  "author": "José Victor Pereira de Oliveira",
+  "license": "MIT",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "test": "node -e \"console.log('no tests yet')\"",
+    "lint": "eslint .",
+    "format": "prettier . --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:ViktorOliveira140/jitterbit-orders-api.git"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "nodemon": "^3.1.0",
+    "prettier": "^3.3.3"
+  }
+}
