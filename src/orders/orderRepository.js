@@ -49,6 +49,14 @@ async function findAllItemsByOrderIds(client, orderIds) {
   return result.rows;
 }
 
+async function deleteOrderById(client, orderId) {
+  const result = await client.query('DELETE FROM "Order" WHERE "orderId" = $1', [
+    orderId,
+  ]);
+
+  return result.rowCount;
+}
+
 module.exports = {
   insertOrder,
   insertItems,
@@ -56,4 +64,5 @@ module.exports = {
   findItemsByOrderId,
   findAllOrders,
   findAllItemsByOrderIds,
+  deleteOrderById,
 };

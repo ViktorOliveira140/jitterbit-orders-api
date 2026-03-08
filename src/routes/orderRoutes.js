@@ -1,5 +1,10 @@
 const { Router } = require('express');
-const { createOrder, getOrderById, listOrders } = require('../orders/orderService');
+const {
+  createOrder,
+  deleteOrder,
+  getOrderById,
+  listOrders,
+} = require('../orders/orderService');
 
 const router = Router();
 
@@ -36,6 +41,13 @@ router.get('/:orderId', async (req, res, next) => {
   }
 });
 router.put('/:orderId', (_req, res) => notImplemented(res));
-router.delete('/:orderId', (_req, res) => notImplemented(res));
+router.delete('/:orderId', async (req, res, next) => {
+  try {
+    await deleteOrder(req.params.orderId);
+    return res.status(204).send();
+  } catch (err) {
+    return next(err);
+  }
+});
 
 module.exports = router;

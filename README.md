@@ -95,9 +95,9 @@ src/
 - [x] Postgres via Docker Compose + schema inicial
 - [x] `POST /order` com mapping + persistência
 - [x] `GET /order/:orderId` (obrigatório)
-- [ ] `GET /order/list` (opcional)
+- [x] `GET /order/list` (opcional)
 - [ ] `PUT /order/:orderId` (opcional)
-- [ ] `DELETE /order/:orderId` (opcional)
+- [x] `DELETE /order/:orderId` (opcional)
 
 ## Comandos úteis
 

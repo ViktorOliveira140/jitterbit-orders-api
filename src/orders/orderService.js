@@ -4,6 +4,7 @@ const { mapCreateOrderBody } = require('./orderMapper');
 const {
   insertItems,
   insertOrder,
+  deleteOrderById,
   findAllItemsByOrderIds,
   findAllOrders,
   findItemsByOrderId,
@@ -112,4 +113,21 @@ async function listOrders() {
   }
 }
 
-module.exports = { createOrder, getOrderById, listOrders };
+async function deleteOrder(orderId) {
+  if (!orderId || typeof orderId !== 'string') {
+    throw new HttpError(400, 'orderId must be a non-empty string');
+  }
+
+  const client = await pool.connect();
+
+  try {
+    const deleted = await deleteOrderById(client, orderId);
+    if (!deleted) {
+      throw new HttpError(404, 'Order not found');
+    }
+  } finally {
+    client.release();
+  }
+}
+
+module.exports = { createOrder, getOrderById, listOrders, deleteOrder };
