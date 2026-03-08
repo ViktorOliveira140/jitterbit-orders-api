@@ -1,7 +1,12 @@
 const { pool } = require('../db');
 const { HttpError } = require('../errors/HttpError');
 const { mapCreateOrderBody } = require('./orderMapper');
-const { insertItems, insertOrder } = require('./orderRepository');
+const {
+  insertItems,
+  insertOrder,
+  findItemsByOrderId,
+  findOrderById,
+} = require('./orderRepository');
 
 async function createOrder(rawBody) {
   const order = mapCreateOrderBody(rawBody);
@@ -29,5 +34,39 @@ async function createOrder(rawBody) {
   return order;
 }
 
-module.exports = { createOrder };
+async function getOrderById(orderId) {
+  if (!orderId || typeof orderId !== 'string') {
+    throw new HttpError(400, 'orderId must be a non-empty string');
+  }
 
+  const client = await pool.connect();
+
+  try {
+    const orderRow = await findOrderById(client, orderId);
+    if (!orderRow) {
+      throw new HttpError(404, 'Order not found');
+    }
+
+    const itemRows = await findItemsByOrderId(client, orderId);
+
+    const creationDate =
+      orderRow.creationDate instanceof Date
+        ? orderRow.creationDate.toISOString()
+        : new Date(orderRow.creationDate).toISOString();
+
+    return {
+      orderId: orderRow.orderId,
+      value: Number(orderRow.value),
+      creationDate,
+      items: itemRows.map((row) => ({
+        productId: Number(row.productId),
+        quantity: Number(row.quantity),
+        price: Number(row.price),
+      })),
+    };
+  } finally {
+    client.release();
+  }
+}
+
+module.exports = { createOrder, getOrderById };

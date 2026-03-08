@@ -14,5 +14,22 @@ async function insertItems(client, orderId, items) {
   }
 }
 
-module.exports = { insertOrder, insertItems };
+async function findOrderById(client, orderId) {
+  const result = await client.query(
+    'SELECT "orderId", "value", "creationDate" FROM "Order" WHERE "orderId" = $1',
+    [orderId]
+  );
 
+  return result.rows[0] || null;
+}
+
+async function findItemsByOrderId(client, orderId) {
+  const result = await client.query(
+    'SELECT "productId", "quantity", "price" FROM "Items" WHERE "orderId" = $1 ORDER BY "productId" ASC',
+    [orderId]
+  );
+
+  return result.rows;
+}
+
+module.exports = { insertOrder, insertItems, findOrderById, findItemsByOrderId };

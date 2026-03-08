@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { createOrder } = require('../orders/orderService');
+const { createOrder, getOrderById } = require('../orders/orderService');
 
 const router = Router();
 
@@ -20,7 +20,14 @@ router.post('/', async (req, res, next) => {
   }
 });
 router.get('/list', (_req, res) => notImplemented(res));
-router.get('/:orderId', (_req, res) => notImplemented(res));
+router.get('/:orderId', async (req, res, next) => {
+  try {
+    const order = await getOrderById(req.params.orderId);
+    return res.status(200).json(order);
+  } catch (err) {
+    return next(err);
+  }
+});
 router.put('/:orderId', (_req, res) => notImplemented(res));
 router.delete('/:orderId', (_req, res) => notImplemented(res));
 
