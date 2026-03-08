@@ -68,12 +68,15 @@ ADMIN_PASS=admin
 
 - `GET /health`
 - `POST /auth/token` (gera token JWT)
+- `GET /docs` (Swagger UI)
+- `GET /docs/openapi.json` (OpenAPI spec)
 - `POST /order`
 - `GET /order/:orderId` (obrigatório)
 - `GET /order/list` (opcional)
 - `PUT /order/:orderId` (opcional)
 - `DELETE /order/:orderId` (opcional)
-- `GET /docs` (Swagger UI)
+
+Observação: todas as rotas de `/order` exigem o header `Authorization: Bearer <token>`. Apenas `/health` e `/docs` ficam públicos.
 
 ## Estrutura do projeto
 
@@ -141,11 +144,12 @@ curl -i http://127.0.0.1:3000/order/list \
 
 ```bash
 curl -i -X POST 'http://127.0.0.1:3000/order' \
+  -H 'Authorization: Bearer SEU_TOKEN' \
   -H 'Content-Type: application/json' \
   --data '{
     "numeroPedido": "v10089015vdb-01",
     "valorTotal": 10000,
-    "dataCriacao": "2023-07-19T12:24:11.5299601+00:00",
+    "dataCriacao": "2026-03-07T12:24:11.5299601+00:00",
     "items": [
       { "idItem": "2434", "quantidadeItem": 1, "valorItem": 1000 }
     ]
@@ -158,7 +162,7 @@ curl -i -X POST 'http://127.0.0.1:3000/order' \
 {
   "orderId": "v10089015vdb",
   "value": 10000,
-  "creationDate": "2023-07-19T12:24:11.529Z",
+  "creationDate": "2026-03-07T12:24:11.529Z",
   "items": [
     {
       "productId": 2434,
@@ -178,13 +182,15 @@ curl -i -X POST 'http://127.0.0.1:3000/order' \
 ### GET /order/:orderId (buscar pedido)
 
 ```bash
-curl -i http://127.0.0.1:3000/order/v10089015vdb
+curl -i http://127.0.0.1:3000/order/v10089015vdb \
+  -H 'Authorization: Bearer SEU_TOKEN'
 ```
 
 ### GET /order/list (listar pedidos)
 
 ```bash
-curl -i http://127.0.0.1:3000/order/list
+curl -i http://127.0.0.1:3000/order/list \
+  -H 'Authorization: Bearer SEU_TOKEN'
 ```
 
 ### PUT /order/:orderId (atualizar pedido)
@@ -193,11 +199,12 @@ curl -i http://127.0.0.1:3000/order/list
 
 ```bash
 curl -i -X PUT 'http://127.0.0.1:3000/order/vputtestvdb' \
+  -H 'Authorization: Bearer SEU_TOKEN' \
   -H 'Content-Type: application/json' \
   --data '{
     "numeroPedido": "vputtestvdb-99",
     "valorTotal": 150,
-    "dataCriacao": "2024-01-01T00:00:00.000Z",
+    "dataCriacao": "2026-03-07T15:00:00.000Z",
     "items": [
       { "idItem": "2", "quantidadeItem": 3, "valorItem": 25 },
       { "idItem": "3", "quantidadeItem": 1, "valorItem": 5 }
@@ -208,7 +215,8 @@ curl -i -X PUT 'http://127.0.0.1:3000/order/vputtestvdb' \
 ### DELETE /order/:orderId (deletar pedido)
 
 ```bash
-curl -i -X DELETE http://127.0.0.1:3000/order/vputtestvdb
+curl -i -X DELETE http://127.0.0.1:3000/order/vputtestvdb \
+  -H 'Authorization: Bearer SEU_TOKEN'
 ```
 
 ### Mapping (resumo)
