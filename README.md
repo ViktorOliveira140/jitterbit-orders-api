@@ -1,4 +1,5 @@
 # jitterbit-orders-api
+Technical challenge for Jitterbit hiring process.
 
 ![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
