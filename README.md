@@ -98,6 +98,8 @@ src/
 - [x] `GET /order/list` (opcional)
 - [x] `PUT /order/:orderId` (opcional)
 - [x] `DELETE /order/:orderId` (opcional)
+- [ ] Swagger / OpenAPI (opcional)
+- [ ] Autenticação JWT (opcional)
 
 ## Comandos úteis
 
