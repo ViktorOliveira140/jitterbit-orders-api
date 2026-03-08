@@ -96,7 +96,7 @@ src/
 - [x] `POST /order` com mapping + persistência
 - [x] `GET /order/:orderId` (obrigatório)
 - [x] `GET /order/list` (opcional)
-- [ ] `PUT /order/:orderId` (opcional)
+- [x] `PUT /order/:orderId` (opcional)
 - [x] `DELETE /order/:orderId` (opcional)
 
 ## Comandos úteis
@@ -144,6 +144,42 @@ curl -i -X POST 'http://127.0.0.1:3000/order' \
 
 ```json
 { "error": { "message": "Order already exists" } }
+```
+
+### GET /order/:orderId (buscar pedido)
+
+```bash
+curl -i http://127.0.0.1:3000/order/v10089015vdb
+```
+
+### GET /order/list (listar pedidos)
+
+```bash
+curl -i http://127.0.0.1:3000/order/list
+```
+
+### PUT /order/:orderId (atualizar pedido)
+
+**Request**
+
+```bash
+curl -i -X PUT 'http://127.0.0.1:3000/order/vputtestvdb' \
+  -H 'Content-Type: application/json' \
+  --data '{
+    "numeroPedido": "vputtestvdb-99",
+    "valorTotal": 150,
+    "dataCriacao": "2024-01-01T00:00:00.000Z",
+    "items": [
+      { "idItem": "2", "quantidadeItem": 3, "valorItem": 25 },
+      { "idItem": "3", "quantidadeItem": 1, "valorItem": 5 }
+    ]
+  }'
+```
+
+### DELETE /order/:orderId (deletar pedido)
+
+```bash
+curl -i -X DELETE http://127.0.0.1:3000/order/vputtestvdb
 ```
 
 ### Mapping (resumo)
