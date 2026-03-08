@@ -4,17 +4,10 @@ const {
   deleteOrder,
   getOrderById,
   listOrders,
+  updateOrder,
 } = require('../orders/orderService');
 
 const router = Router();
-
-function notImplemented(res) {
-  return res.status(501).json({
-    error: {
-      message: 'Not implemented yet',
-    },
-  });
-}
 
 router.post('/', async (req, res, next) => {
   try {
@@ -40,7 +33,14 @@ router.get('/:orderId', async (req, res, next) => {
     return next(err);
   }
 });
-router.put('/:orderId', (_req, res) => notImplemented(res));
+router.put('/:orderId', async (req, res, next) => {
+  try {
+    const updated = await updateOrder(req.params.orderId, req.body);
+    return res.status(200).json(updated);
+  } catch (err) {
+    return next(err);
+  }
+});
 router.delete('/:orderId', async (req, res, next) => {
   try {
     await deleteOrder(req.params.orderId);

@@ -57,6 +57,33 @@ async function deleteOrderById(client, orderId) {
   return result.rowCount;
 }
 
+async function updateOrderById(client, orderId, value, creationDate) {
+  const result = await client.query(
+    'UPDATE "Order" SET "value" = $2, "creationDate" = $3 WHERE "orderId" = $1',
+    [orderId, value, creationDate]
+  );
+
+  return result.rowCount;
+}
+
+async function deleteItemsByProductIds(client, orderId, productIds) {
+  const result = await client.query(
+    'DELETE FROM "Items" WHERE "orderId" = $1 AND "productId" = ANY($2)',
+    [orderId, productIds]
+  );
+
+  return result.rowCount;
+}
+
+async function updateItemByProductId(client, orderId, item) {
+  const result = await client.query(
+    'UPDATE "Items" SET "quantity" = $3, "price" = $4 WHERE "orderId" = $1 AND "productId" = $2',
+    [orderId, item.productId, item.quantity, item.price]
+  );
+
+  return result.rowCount;
+}
+
 module.exports = {
   insertOrder,
   insertItems,
@@ -65,4 +92,7 @@ module.exports = {
   findAllOrders,
   findAllItemsByOrderIds,
   deleteOrderById,
+  updateOrderById,
+  deleteItemsByProductIds,
+  updateItemByProductId,
 };
