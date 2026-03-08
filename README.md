@@ -94,7 +94,7 @@ src/
 - [x] Setup do projeto (Express + health check)
 - [x] Postgres via Docker Compose + schema inicial
 - [x] `POST /order` com mapping + persistência
-- [ ] `GET /order/:orderId` (obrigatório)
+- [x] `GET /order/:orderId` (obrigatório)
 - [ ] `GET /order/list` (opcional)
 - [ ] `PUT /order/:orderId` (opcional)
 - [ ] `DELETE /order/:orderId` (opcional)

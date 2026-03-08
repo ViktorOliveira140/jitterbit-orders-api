@@ -32,4 +32,28 @@ async function findItemsByOrderId(client, orderId) {
   return result.rows;
 }
 
-module.exports = { insertOrder, insertItems, findOrderById, findItemsByOrderId };
+async function findAllOrders(client) {
+  const result = await client.query(
+    'SELECT "orderId", "value", "creationDate" FROM "Order" ORDER BY "creationDate" DESC, "orderId" ASC'
+  );
+
+  return result.rows;
+}
+
+async function findAllItemsByOrderIds(client, orderIds) {
+  const result = await client.query(
+    'SELECT "orderId", "productId", "quantity", "price" FROM "Items" WHERE "orderId" = ANY($1) ORDER BY "orderId" ASC, "productId" ASC',
+    [orderIds]
+  );
+
+  return result.rows;
+}
+
+module.exports = {
+  insertOrder,
+  insertItems,
+  findOrderById,
+  findItemsByOrderId,
+  findAllOrders,
+  findAllItemsByOrderIds,
+};

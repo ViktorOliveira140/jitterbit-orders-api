@@ -4,6 +4,8 @@ const { mapCreateOrderBody } = require('./orderMapper');
 const {
   insertItems,
   insertOrder,
+  findAllItemsByOrderIds,
+  findAllOrders,
   findItemsByOrderId,
   findOrderById,
 } = require('./orderRepository');
@@ -69,4 +71,45 @@ async function getOrderById(orderId) {
   }
 }
 
-module.exports = { createOrder, getOrderById };
+async function listOrders() {
+  const client = await pool.connect();
+
+  try {
+    const orderRows = await findAllOrders(client);
+    if (orderRows.length === 0) {
+      return [];
+    }
+
+    const orderIds = orderRows.map((row) => row.orderId);
+    const itemRows = await findAllItemsByOrderIds(client, orderIds);
+
+    const itemsByOrderId = new Map();
+    for (const row of itemRows) {
+      const list = itemsByOrderId.get(row.orderId) || [];
+      list.push({
+        productId: Number(row.productId),
+        quantity: Number(row.quantity),
+        price: Number(row.price),
+      });
+      itemsByOrderId.set(row.orderId, list);
+    }
+
+    return orderRows.map((row) => {
+      const creationDate =
+        row.creationDate instanceof Date
+          ? row.creationDate.toISOString()
+          : new Date(row.creationDate).toISOString();
+
+      return {
+        orderId: row.orderId,
+        value: Number(row.value),
+        creationDate,
+        items: itemsByOrderId.get(row.orderId) || [],
+      };
+    });
+  } finally {
+    client.release();
+  }
+}
+
+module.exports = { createOrder, getOrderById, listOrders };
