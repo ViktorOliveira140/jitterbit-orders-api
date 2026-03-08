@@ -1,7 +1,9 @@
 const express = require('express');
 const orderRoutes = require('./routes/orderRoutes');
+const authRoutes = require('./routes/authRoutes');
 const { notFoundHandler } = require('./middlewares/notFoundHandler');
 const { errorHandler } = require('./middlewares/errorHandler');
+const { authMiddleware } = require('./middlewares/authMiddleware');
 const swaggerUi = require('swagger-ui-express');
 
 const openApiDocument = require('../docs/openapi.json');
@@ -15,7 +17,9 @@ function createApp() {
     res.status(200).json({ status: 'ok' });
   });
 
-  app.use('/order', orderRoutes);
+  app.use('/auth', authRoutes);
+
+  app.use('/order', authMiddleware, orderRoutes);
 
   app.get('/docs/openapi.json', (_req, res) => {
     res.status(200).json(openApiDocument);

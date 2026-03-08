@@ -10,9 +10,13 @@
       "url": "http://127.0.0.1:3000"
     }
   ],
+  "security": [{ "bearerAuth": [] }],
   "tags": [
     {
       "name": "Health"
+    },
+    {
+      "name": "Auth"
     },
     {
       "name": "Orders"
@@ -23,6 +27,7 @@
       "get": {
         "tags": ["Health"],
         "summary": "Health check",
+        "security": [],
         "responses": {
           "200": {
             "description": "OK",
@@ -35,6 +40,48 @@
                   },
                   "required": ["status"]
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/token": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Generate JWT token",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AuthTokenInput" },
+              "example": { "username": "admin", "password": "admin" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthTokenOutput" }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           }
@@ -211,7 +258,29 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
+      "AuthTokenInput": {
+        "type": "object",
+        "properties": {
+          "username": { "type": "string" },
+          "password": { "type": "string" }
+        },
+        "required": ["username", "password"]
+      },
+      "AuthTokenOutput": {
+        "type": "object",
+        "properties": {
+          "token": { "type": "string" }
+        },
+        "required": ["token"]
+      },
       "CreateOrderInput": {
         "type": "object",
         "properties": {

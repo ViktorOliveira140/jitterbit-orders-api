@@ -58,16 +58,22 @@ Exemplo (valores padrão):
 PORT=3000
 HOST=127.0.0.1
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/jitterbit_orders
+JWT_SECRET=change-me
+JWT_EXPIRES_IN=1h
+ADMIN_USER=admin
+ADMIN_PASS=admin
 ```
 
 ## Endpoints
 
 - `GET /health`
+- `POST /auth/token` (gera token JWT)
 - `POST /order`
 - `GET /order/:orderId` (obrigatório)
 - `GET /order/list` (opcional)
 - `PUT /order/:orderId` (opcional)
 - `DELETE /order/:orderId` (opcional)
+- `GET /docs` (Swagger UI)
 
 ## Estrutura do projeto
 
@@ -77,12 +83,16 @@ src/
   app.js                      # cria a aplicação Express (middlewares + rotas)
   db.js                       # pool de conexão com PostgreSQL (pg)
   routes/
+    authRoutes.js             # rotas HTTP de /auth
     orderRoutes.js            # rotas HTTP de /order
+  auth/
+    authService.js            # emissão de token JWT
   orders/
     orderMapper.js            # validação + mapping do payload do desafio
     orderService.js           # regras de negócio (transação, erros)
     orderRepository.js        # queries SQL para Order/Items
   middlewares/
+    authMiddleware.js         # valida Authorization: Bearer <token>
     errorHandler.js           # handler global de erros
     notFoundHandler.js        # handler de 404
   errors/
@@ -98,8 +108,8 @@ src/
 - [x] `GET /order/list` (opcional)
 - [x] `PUT /order/:orderId` (opcional)
 - [x] `DELETE /order/:orderId` (opcional)
-- [ ] Swagger / OpenAPI (opcional)
-- [ ] Autenticação JWT (opcional)
+- [x] Swagger / OpenAPI (opcional)
+- [x] Autenticação JWT (opcional)
 
 ## Comandos úteis
 
@@ -107,6 +117,23 @@ src/
 - Format: `npm run format`
 
 ## Exemplos
+
+### POST /auth/token (gerar token)
+
+**Request**
+
+```bash
+curl -s http://127.0.0.1:3000/auth/token \
+  -H 'Content-Type: application/json' \
+  --data '{"username":"admin","password":"admin"}'
+```
+
+Depois use o token nas requisições:
+
+```bash
+curl -i http://127.0.0.1:3000/order/list \
+  -H 'Authorization: Bearer SEU_TOKEN'
+```
 
 ### POST /order (criar pedido)
 
