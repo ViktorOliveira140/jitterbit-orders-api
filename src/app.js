@@ -1,4 +1,5 @@
 const express = require('express');
+const orderRoutes = require('./routes/orderRoutes');
 
 function createApp() {
   const app = express();
@@ -8,6 +9,8 @@ function createApp() {
   app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'ok' });
   });
+
+  app.use('/order', orderRoutes);
 
   return app;
 }
